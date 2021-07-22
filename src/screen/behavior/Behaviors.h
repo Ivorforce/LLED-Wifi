@@ -10,9 +10,6 @@
 #include "NativeBehavior.h"
 #include "Ping.h"
 #include "StrobeDemo.h"
-#include "Dotted.h"
-#include "PerfectStrobe.h"
-#include "Demo.h"
 #include "util/LinearMap.h"
 
 class NativeBehaviors {
@@ -22,7 +19,7 @@ public:
 
     static Dict list;
 
-    static void init();;
+    static void init();
 };
 
 #endif //LED_FAN_BEHAVIORS_H

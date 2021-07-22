@@ -7,9 +7,9 @@
 #include "Renderer.h"
 
 Renderer::Renderer(size_t pixelCount, size_t overflowWall)
-: pixelCount(pixelCount), _overflowWall(overflowWall) {
+: pixelCount(pixelCount), overflowWall(overflowWall) {
     rgb = new PRGB[pixelCount]{PRGB::black};
-    _rgbOutput = new uint32_t [pixelCount * 3]{0};
+    _rgbOutput = new uint32_t [(pixelCount + overflowWall) * 3]{0};
     _localBrightness = new float[pixelCount]{1};
 
     _brightnessLUT = new uint32_t[256];

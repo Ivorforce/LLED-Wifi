@@ -28,10 +28,12 @@ Updater::Updater() {
                 SerialLog.print("\nEnd").ln();
             })
             .onProgress([](unsigned int progress, unsigned int total) {
-                SerialLog.printf("Progress: %u%%\r", (progress / (total / 100)));
+                // TODO
+//                SerialLog.printf("Progress: %u%%\r", (progress / (total / 100)));
             })
             .onError([](ota_error_t error) {
-                SerialLog.printf("Error[%u]: ", error);
+                // TODO
+//                SerialLog.printf("Error[%u]: ", error);
                 if (error == OTA_AUTH_ERROR) SerialLog.print("Auth Failed").ln();
                 else if (error == OTA_BEGIN_ERROR) SerialLog.print("Begin Failed").ln();
                 else if (error == OTA_CONNECT_ERROR) SerialLog.print("Connect Failed").ln();

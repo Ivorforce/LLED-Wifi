@@ -8,9 +8,9 @@
 #include "Setup.h"
 
 Apa102Renderer::Apa102Renderer(size_t pixelCount, size_t overflowWall) : Renderer(pixelCount, overflowWall) {
-    _endBoundary = pixelCount / 32 * 4 + 1;
+    _endBoundary = (pixelCount + overflowWall) / 32 * 4 + 1;
     _startBoundary = 4;
-    bufferSize = pixelCount * 4 + _startBoundary + _endBoundary;
+    bufferSize = (pixelCount + overflowWall) * 4 + _startBoundary + _endBoundary;
 
     esp_err_t err;
 
@@ -70,8 +70,9 @@ void Apa102Renderer::_flush() {
     auto colorBuffer = reinterpret_cast<Apa102Color*>(buffer);
 
     unsigned int i = 0, c = _startBoundary / 4;
-    while(i < pixelCount * 3) {
-        uint32_t r_r = _rgbOutput[i++], g_r = _rgbOutput[i++], b_r = _rgbOutput[i++];
+    while(i < (pixelCount + overflowWall) * 3) {
+        uint32_t r_r = _rgbOutput[0], g_r = _rgbOutput[1], b_r = _rgbOutput[2];
+        i+=3;
         uint32_t peakBrightness = std::max(std::max(r_r, g_r), b_r);
 
         if (peakBrightness == 0) {

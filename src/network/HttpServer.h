@@ -7,7 +7,6 @@
 
 
 #include <util/VideoInterface.h>
-#include <sensor/RotationSensor.h>
 #include <util/RegularClock.h>
 
 #include "Setup.h"

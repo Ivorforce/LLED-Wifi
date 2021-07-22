@@ -54,44 +54,7 @@ String HttpServer::processTemplates(const String &var) {
 #else
         return String(app->screen->pin);
 #endif
-    if (var == "MAGNET_PIN") {
-        String r = "";
-        for (auto pin : {ROTATION_SENSOR_PINS}) {
-            r += String(pin) + ", ";
-        }
-        return r;
-    }
 
-    if (var == "VIRTUAL_SCREEN_SIZE") {
-        return String(app->screen->cartesianResolution);
-    }
-    if (var == "MAGNET_VALUE") {
-        return app->rotationSensor->stateDescription();
-    }
-    if (var == "ROTATION_SPEED") {
-        if (app->rotationSensor->fixedRotation >= 0)
-            return "Fixed: " + String(app->rotationSensor->fixedRotation);
-
-        IntRoller *timestamps = app->rotationSensor->checkpointTimestamps;
-        IntRoller *indices = app->rotationSensor->checkpointIndices;
-        String history = "";
-        for (int i = 1; i < timestamps->count; ++i) {
-            int diffMS = ((*timestamps)[i] - (*timestamps)[i - 1]) / 1000;
-            history += String(diffMS) + "ms (" + (*indices)[i] + "), ";
-        }
-
-        if (app->rotationSensor->isPaused) {
-            return "Paused";
-        }
-
-        if (!app->rotationSensor->isReliable())
-            return "Unreliable (" + history + ")";
-
-        return String(int(app->rotationSensor->rotationsPerSecond())) + "r/s (" + history + ")";
-    }
-    if (var == "MOTOR_SPEED") {
-        return String(app->speedControl->getDesiredSpeed());
-    }
     if (var == "UPTIME") {
         return Profiler::readableTime(esp_timer_get_time(), 2);
     }
@@ -100,11 +63,6 @@ String HttpServer::processTemplates(const String &var) {
 
         auto fpsString = String(1000 * 1000 / std::max(meanMicrosPerFrame, app->regularClock->microsecondsPerFrame))
             + " (slack: " + String(_max(0, (int) (app->regularClock->microsecondsPerFrame - meanMicrosPerFrame))) + "µs)";
-
-#if ROTATION_SENSOR_TYPE == ROTATION_SENSOR_TYPE_HALL_XTASK
-        float meanHallMicrosPerFrame = hallTimer->frameTimes.mean();
-        fpsString += " / Sensor: " + String(1000 * 1000 / meanHallMicrosPerFrame);
-#endif
 
         return fpsString;
     }
@@ -152,7 +110,6 @@ void HttpServer::setupRoutes() {
     auto template_processor = std::bind(&HttpServer::processTemplates, this, _1);
     auto videoInterface = this->videoInterface;
     auto screen = app->screen;
-    auto rotationSensor = app->rotationSensor;
     auto updater = app->updater;
 
     _server.serveStatic("/material.min.js", SPIFFS, "/material.min.js");
@@ -235,19 +192,7 @@ void HttpServer::setupRoutes() {
     _server.on("/log", HTTP_GET, [](AsyncWebServerRequest *request) {
         request->send(200, "text/plain", WifiLog.output.string());
     });
-
-    registerREST("/rotation", "rotation", [rotationSensor](String value) {
-        auto rotation = value.toFloat();
-        rotationSensor->fixedRotation = rotation;
-        return "Success";
-    }, [rotationSensor]() { return String(rotationSensor->fixedRotation); });
-
-    registerREST("/speed", "speed-control", [videoInterface](String value) {
-        auto speed = value.toFloat();
-        videoInterface->artnetServer->speedControl->setDesiredSpeed(speed);
-        return "Success";
-    }, [videoInterface]() { return String(videoInterface->artnetServer->speedControl->getDesiredSpeed()); });
-
+    
     registerREST("/brightness", "brightness", [screen](String value) {
         screen->setBrightness(value.toFloat());
         return "Success";

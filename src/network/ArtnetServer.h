@@ -7,7 +7,6 @@
 
 
 #include <screen/Screen.h>
-#include <speed/SpeedControl.h>
 #include "AsyncArtnet.h"
 #include "ArtnetEndpoint.h"
 
@@ -16,9 +15,8 @@ public:
     AsyncArtnet<ArtnetEndpoint> *artnet;
 
     Screen *screen;
-    SpeedControl *speedControl;
 
-    ArtnetServer(Screen *screen, SpeedControl *speedControl);
+    ArtnetServer(Screen *screen);
 
     void acceptDMX(ArtnetChannelPacket<ArtnetEndpoint> *);
     void acceptSync(IPAddress *remoteIP);

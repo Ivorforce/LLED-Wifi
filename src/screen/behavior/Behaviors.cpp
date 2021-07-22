@@ -3,7 +3,6 @@
 //
 
 #include "Behaviors.h"
-#include "CartesianDemo.h"
 
 NativeBehaviors::Dict NativeBehaviors::list = NativeBehaviors::Dict();
 
@@ -14,18 +13,18 @@ void NativeBehaviors::init() {
         return nullptr;
     });
     list.put("Demo", []() {
-        return new Demo();
+        return new StrobeDemo();
     });
     list.put("StrobeDemo", []() {
         return new StrobeDemo();
     });
     list.put("Strobe", []() {
-        return new PerfectStrobe();
+        return new StrobeDemo();
     });
     list.put("Dotted", []() {
-        return new Dotted();
+        return new StrobeDemo();
     });
     list.put("Cartesian Demo", []() {
-        return new CartesianDemo();
+        return new StrobeDemo();
     });
 }

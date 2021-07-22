@@ -13,6 +13,7 @@
 class Renderer {
 public:
     size_t pixelCount;
+    size_t overflowWall;
     PRGB *rgb;
 
     explicit Renderer(size_t pixelCount, size_t overflowWall);
@@ -36,8 +37,6 @@ public:
     virtual void setMaxLightness(float lightness);
     virtual float getMaxLightness();
 protected:
-    int _overflowWall;
-
     float _response;
     float _brightness;
     float *_localBrightness;

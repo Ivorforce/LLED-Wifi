@@ -6,8 +6,6 @@
 #define LED_FAN_APP_H
 
 
-#include <sensor/RotationSensor.h>
-#include <speed/SpeedControl.h>
 #include <screen/Screen.h>
 #include <network/HttpServer.h>
 #include <network/ArtnetServer.h>
@@ -16,8 +14,6 @@
 
 class App {
 public:
-    RotationSensor *rotationSensor;
-    SpeedControl *speedControl;
     Screen *screen;
 
     HttpServer *server;

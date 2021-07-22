@@ -14,21 +14,8 @@ public:
     unsigned int net;
     bool isAdvertised = true;
 
-#ifdef RTTI_SUPPORTED
-    virtual ~ArtnetEndpoint() = default;
-#else
-    Screen::Mode mode;
-#endif
-
-    ArtnetEndpoint(unsigned int net, long byteLength, const String &name
-#ifndef RTTI_SUPPORTED
-    , Screen::Mode mode
-#endif
-    )
+    ArtnetEndpoint(unsigned int net, long byteLength, const String &name)
     : ArtnetChannel(net << 8, (byteLength + 255) / 256, name), net(net)
-#ifndef RTTI_SUPPORTED
-    , mode(mode)
-#endif
     {}
 };
 
