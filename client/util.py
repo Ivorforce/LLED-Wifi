@@ -4,8 +4,6 @@ from time import sleep
 from typing import Iterable, TypeVar, List, Callable, Generic, Tuple
 from itertools import zip_longest
 
-from PIL import Image
-
 from dataclasses import dataclass, field
 from threading import Thread, Lock, Condition, Timer
 
@@ -29,59 +27,10 @@ def flatmap(fun: Callable[[U], Iterable[T]], iterables: Iterable[U]) -> List[T]:
     return flatten(map(fun, iterables))
 
 
-def lerp(a, b, coord):
-    if isinstance(a, tuple):
-        return tuple([lerp(c, d, coord) for c, d in zip(a, b)])
-    ratio = coord - math.floor(coord)
-    return int(round(a * (1.0 - ratio) + b * ratio))
-
-
-def bilinear(im: Image, x, y):
-    x1, y1 = int(math.floor(x)), int(math.floor(y))
-    x2, y2 = int(math.ceil(x1)), int(math.ceil(y))
-    left = lerp(im.getpixel((x1, y1)), im.getpixel((x1, y2)), y)
-    right = lerp(im.getpixel((x2, y1)), im.getpixel((x2, y2)), y)
-    return lerp(left, right, x)
-
-
 class RepeatTimer(Timer):
     def run(self):
         while not self.finished.wait(self.interval):
             self.function(*self.args, **self.kwargs)
-
-
-@dataclass
-class BufferedResource(Generic[T]):
-    max_buffer_size: int
-    buffer: List[T] = field(default_factory=list)
-
-    condition: Condition = field(default_factory=Condition)
-
-    def push(self, resource: T):
-        with self.condition:
-            while len(self.buffer) >= self.max_buffer_size:
-                self.condition.wait(2)
-
-            self.buffer.append(resource)
-            self.condition.notify()
-
-    def pop(self) -> T:
-        with self.condition:
-            while len(self.buffer) == 0:
-                self.condition.wait(2)
-
-            resource = self.buffer.pop(0)
-            self.condition.notify()
-
-        return resource
-
-    def start_async_factory(self, function: Callable[[], T]) -> RepeatTimer:
-        timer = RepeatTimer(
-            interval=0,
-            function=lambda: self.push(function())
-        )
-        timer.start()
-        return timer
 
 
 class RegularClock:

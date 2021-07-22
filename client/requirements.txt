@@ -1,4 +1,2 @@
-PILLOW
-mss
 requests
 numexpr

@@ -4,9 +4,6 @@ import os
 import sys
 
 import observe_log
-import send_video
-import commands as subcommands
-import simulate_rotation
 
 assert (3, 0) <= sys.version_info
 
@@ -23,19 +20,8 @@ command_parser.add_argument(
 
 commands = command_parser.add_subparsers(dest='subcommand')
 
-send_video.setup(commands.add_parser(
-    "send-video", help="Send a streaming video."
-))
-
 observe_log.setup(commands.add_parser(
     "observe-log", help="Actively observe the log."
-))
-
-subcommands.setup_set_behavior(commands.add_parser(
-    "behavior", help="Set the current behavior."
-))
-simulate_rotation.setup(commands.add_parser(
-    "simulate-rotation", help="Simulate a rotation at no movement."
 ))
 
 
