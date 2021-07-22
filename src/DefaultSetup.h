@@ -18,7 +18,7 @@
 //#define WIFI_ENABLED
 #define HOST_NETWORK_SSID "LLED Strip"
 #define HOST_NETWORK_PASSWORD "We love LED"
-#define WIFI_HOSTNAME "lled.fan"
+#define WIFI_HOSTNAME "lled.wifi"
 
 // ------------------------------------------
 // ---- Screen

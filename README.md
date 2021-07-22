@@ -1,10 +1,8 @@
 # About
 
-This software is intended to be run on an ESP32 attached to a spinning blade of an LED Fan. Detailed build instructions are not provided at this point.
+This software is intended to run an LED strip using Wifi ArtNET, or just passively.
 
-It controls I/O for the fan, has a web interface and is controllable via ArtNet. 
-
-A python script is attached which is capable of capturing screen or images and sending them to the fan.
+While it does support FastLED for a variety of strip types, Apa102 / SK9822 are recommended for optimal output. Here, about 100x the FPS and about the same amount of color accuracy through gamma correction can be achieved.
 
 # Setup
 
@@ -62,21 +60,6 @@ as per http://docs.platformio.org/en/latest/platforms/espressif32.html#over-the-
 
 If reversion to factory is required, run `./otatool_proxy.py --port "/dev/ttyUSB1" erase_otadata`. This will erase OTA partitions and revert back to what was uploaded via serial.
 The script is sub-par, especially with the parts provided from esp-idf, and may need be checked. It is recommended to set output from parttool not to "None" since several restarts of the device are required during running of scripts.
-
-
-## Build
-
-The chip expects a single LED strip to be layout down across the whole fan blade, with the center LED being offset by 0.25 LEDs away from data cable (end). This will place LEDs on each side at 0.5 offset from the other side.
-
-#### Reasoning
-
-**Why not just one blade?** Two fan blades will balance out the rotation at high speeds.
-
-**Why not just on one blade?** By placing the LEDs across both blade edges and not just one, the rotation speed can be halved, which both conserves energy, noise and stabilizes across lower clock speeds.
-
-**Why not mirrored across the center?** By offsetting the pixels, a larger area can be covered with light, eliminating holes in the picture. This also doubles the resolution, which makes for a higher-fidelity picture. When placing the strips, make sure the internal light sources, not the pixels themselves, are placed correctly.
-
-**Why a single critical checkpoint?** Reed switches are, among one another, quite inexact (+-20%). One reed switch however functions in an analogue way and switch on very reliably.
 
 ## Performance Considerations
 
