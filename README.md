@@ -2,7 +2,7 @@
 
 This software is intended to run an LED strip using Wifi ArtNET, or just passively.
 
-While it does support FastLED for a variety of strip types, Apa102 / SK9822 are recommended for optimal output. Here, about 100x the FPS and about the same amount of color accuracy through gamma correction can be achieved.
+While it does support FastLED for a variety of strip types, Apa102 / SK9822 are recommended for optimal output. Here, about 100x the FPS and 32x the color accuracy can be achieved.
 
 # Setup
 
